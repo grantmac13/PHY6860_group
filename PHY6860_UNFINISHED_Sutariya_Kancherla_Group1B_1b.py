@@ -60,17 +60,52 @@ def hist_func(num_bins, N, array):
     # xfit = np.linspace(-4, 4, 100)
     # yfit = f_max*2.7**(-xfit**2/2)  # used to be: f_max*math.exp(-xfit**2/2) but that resulted in an error
     # plt.plot(xfit, yfit)
-    plt.show()
+    # plt.show()  Grant: in order to plot the gaussian curve on the same plot, need to show it later
+
+
+def gaussian_plot(x, N):
+    sigma = 1.0
+    rho = N/(np.sqrt(2*np.pi)*sigma)*np.exp(-x**2/(2*sigma**2))
+
+    plt.plot(x, rho, 'm--', label='Gaussian Fit')
+    #plt.show()
+
+
+x_gaussian = np.linspace(-10, 10, 1001)
 
 
 # calling the histogram function for different bin values for N = 1000
 hist_func(10, N1, array1)
+gaussian_plot(x_gaussian, N1)
+plt.show()
+
 hist_func(20, N1, array1)   ##
+gaussian_plot(x_gaussian, N1)
+plt.show()
+
 hist_func(50, N1, array1)   ##
+gaussian_plot(x_gaussian, N1)
+plt.show()
+
 hist_func(100, N1, array1)  ##
+gaussian_plot(x_gaussian, N1)
+plt.show()
+
 
 # calling the histogram function for different bin values for N = 1000000
 hist_func(10, N2, array2)   ##
+gaussian_plot(x_gaussian, N2)
+plt.show()
+
 hist_func(20, N2, array2)   ##
+gaussian_plot(x_gaussian, N2)
+plt.show()
+
 hist_func(50, N2, array2)   ##
+gaussian_plot(x_gaussian, N2)
+plt.show()
+
 hist_func(100, N2, array2)  ##
+gaussian_plot(x_gaussian, N2)
+plt.show()
+

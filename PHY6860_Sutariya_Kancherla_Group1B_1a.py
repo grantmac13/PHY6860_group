@@ -26,7 +26,7 @@ array2 = return_array(N2)
 
 # function to create a histogram with varying bin size (10, 20, 50, 100)
 def bin_plot(num_bins, bin_array, N):
-    plt.hist(bin_array, num_bins, facecolor='blue')
+    plt.hist(bin_array, num_bins, density=1, facecolor='blue')
     plt.title("Random Values = "+str(N))
     plt.xlabel("Bins = "+str(num_bins))
     plt.ylabel("Number of Random Values")

@@ -2,10 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
 
-grid = []  # defining arrays for graphs
+inverted_grid = []  # defining arrays for graphs
 pct = []
 critical = []
-
 for N in [5, 10, 15, 20, 30, 50, 80]:   # grid sizes
     pct.clear()
     span = np.zeros((N, N))
@@ -162,28 +161,27 @@ for N in [5, 10, 15, 20, 30, 50, 80]:   # grid sizes
             pct.append(P)
         if cluster == 1 and spanct == 3:  # minimize error effects
                 span = lat
+        print(N)
 
     # create discrete colormap
-    cmap = colors.ListedColormap(['red', 'blue'])
-    bounds = [-.5, .5, 1.5]
-    norm = colors.BoundaryNorm(bounds, cmap.N)
-
-    fig, ax = plt.subplots()
-
-    ax.imshow(span, cmap=cmap, norm=norm)
-    plt.title("First spanning cluster for " + str(N) + " X " + str(N) + " grid (cluster in blue)")
-    # draw gridlines
-    ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=2)
-    ax.set_xticks(np.arange(-.5, N+.5, 1));
-    ax.set_yticks(np.arange(-.5, N+.5, 1));
+    # cmap = colors.ListedColormap(['red', 'blue'])
+    # bounds = [-.5, .5, 1.5]
+    # norm = colors.BoundaryNorm(bounds, cmap.N)
+    #
+    # fig, ax = plt.subplots()
+    #
+    # ax.imshow(span, cmap=cmap, norm=norm)
+    # plt.title("First spanning cluster for " + str(N) + " X " + str(N) + " grid (cluster in blue)")
+    # # draw gridlines
+    # ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=2)
+    # ax.set_xticks(np.arange(-.5, N+.5, 1));
+    # ax.set_yticks(np.arange(-.5, N+.5, 1));
     critical.append(pct[2])
-    grid.append(N)
+    inverted_grid.append(1/N)
 
-
-plt.show()
-plt.plot(grid, critical, 'b*')
-plt.plot(grid, critical, 'g-')
-plt.xlim(85, 0)
+# plt.show()
+plt.plot(inverted_grid, critical, 'b*')
+plt.plot(inverted_grid, critical, 'g-')
 plt.title("2D percolation with varying dimension length")
 plt.xlabel("dimension length")
 plt.ylabel("critical percentage")

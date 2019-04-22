@@ -1,13 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from matplotlib import colors
 
 grid = []  # defining arrays for graphs
 pct = []
 critical = []
+
 for N in [5, 10, 15, 20, 30, 50, 80]:   # grid sizes
     pct.clear()
-    for P in range(100):   # probability of each point on lattic being filled
+    span = np.zeros((N, N))
+    spanct = 0
+    for P in range(100):   # probability of each point on lattice being filled
         lat = np.zeros((N, N))
         clus = np.zeros((N, N))
         c = 0
@@ -85,7 +88,7 @@ for N in [5, 10, 15, 20, 30, 50, 80]:   # grid sizes
                     clus[i, j] = 1
 
         cluster = 0
-        for x in range(500):    # combines clusters which start separate but intersect
+        for x in range(50):    # combines clusters which start separate but intersect
             for i in range(N):
                 for j in range(N):
                     for a in range(1, N):
@@ -146,7 +149,7 @@ for N in [5, 10, 15, 20, 30, 50, 80]:   # grid sizes
                                 clus[i, j] = clus[i, j - 1]
                             elif clus[i, j] == a and 0 < clus[i-1, j] < a:
                                 clus[i, j] = clus[i-1, j]
-        print(lat, clus, c)
+
         for i in range(N):  # defines spanning cluster
             for j in range(N):
                 for a in range(N):
@@ -154,9 +157,26 @@ for N in [5, 10, 15, 20, 30, 50, 80]:   # grid sizes
                         cluster = 1
                     if clus[0, j] == clus[N - 1, a] and clus[0, j] != 0:
                         cluster = 1
-        if cluster == 1:
+        if cluster == 1:  # counting spanning clusters
+            spanct += 1
             pct.append(P)
-    critical.append(pct[0])
+        if cluster == 1 and spanct == 3:  # minimize error effects
+                span = lat
+
+    # create discrete colormap
+    cmap = colors.ListedColormap(['red', 'blue'])
+    bounds = [-.5, .5, 1.5]
+    norm = colors.BoundaryNorm(bounds, cmap.N)
+
+    fig, ax = plt.subplots()
+
+    ax.imshow(span, cmap=cmap, norm=norm)
+    plt.title("First spanning cluster for " + str(N) + " X " + str(N) + " grid (cluster in blue)")
+    # draw gridlines
+    ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=2)
+    ax.set_xticks(np.arange(-.5, N+.5, 1));
+    ax.set_yticks(np.arange(-.5, N+.5, 1));
+    critical.append(pct[2])
     grid.append(N)
 
 
@@ -168,3 +188,4 @@ plt.title("2D percolation with varying dimension length")
 plt.xlabel("dimension length")
 plt.ylabel("critical percentage")
 plt.show()
+

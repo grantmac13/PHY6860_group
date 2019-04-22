@@ -3,11 +3,13 @@ import matplotlib.pyplot as plt
 
 
 
-def predator_prey(fish_0, shark_0, N=10, N_t=100, fish_reproduce=3, shark_reproduce=7, starve=5):
+def predator_prey(fish_0, shark_0, fish_reproduce, shark_reproduce, starve, N_t=300, N=10):
     # setup lattice
-    # gridx = np.linspace(-(N-1)/2, (N-1)/2)
-    # gridy = np.linspace(-(N-1)/2, (N-1)/2)
-    # x, y = np.meshgrid(gridx, gridy)
+
+    gridx = np.linspace(-N/2, N/2)
+    gridy = np.linspace(-N/2, N/2)
+    x, y = np.meshgrid(gridx, gridy)
+
     if shark_0 + fish_0 > N**2:
         shark_0 = N**2 - fish_0
 
@@ -151,17 +153,12 @@ def predator_prey(fish_0, shark_0, N=10, N_t=100, fish_reproduce=3, shark_reprod
                             shark[i, j] = 0
                             shark_ate[i, j] = p
                             shark_move[i, j] = 1
-                            print("shark didn't eat", shark_ate[shark_neighbors[rand]], p, starve)
                         else:
                             shark[shark_neighbors[rand]] = shark[i, j] + 1
-                            print("shark didn't eat", shark_ate[shark_neighbors[rand]], p, starve)
                             shark[i, j] = -1
                             shark_move[i, j] = 1
 
                         if shark_ate[shark_neighbors[rand]] <= p - starve:
-                            print("shark moved this time step", shark_ate[shark_neighbors[rand]], p, starve)
-                            # print(p, starve)
-                            # print(shark_ate[shark_neighbors[rand]], "when shark is about to starve")
                             shark[shark_neighbors[rand]] = -1  # not totally sure where to kill the starved sharks...
 
 
@@ -170,7 +167,6 @@ def predator_prey(fish_0, shark_0, N=10, N_t=100, fish_reproduce=3, shark_reprod
                         shark_move[i, j] = 1
 
                         if shark_ate[i, j] <= p - starve:
-                            print("shark didn't move", shark_ate[i, j], p, starve)
                             shark[i, j] = -1  # not totally sure where to kill the starved sharks...
 
 
@@ -189,10 +185,24 @@ def predator_prey(fish_0, shark_0, N=10, N_t=100, fish_reproduce=3, shark_reprod
         list_fish.append(fish)
         list_shark.append(shark)
 
+
+        if (p-1)%(N_t/10) == 0:
+            tmp_fish = fish + np.ones_like(fish)
+            tmp_shark = shark + np.ones_like(shark)
+
+            plt.scatter(x, y, tmp_fish, 'm')
+            plt.scatter(x, y, tmp_shark, 'g')
+            plt.ylabel("x")
+            plt.xlabel("y")
+            plt.title("Snapshot for step #"+str(p)+" of the numerical simulation")
+            plt.savefig("fish_shark_step"+str(p)+".png")
+
+            plt.show()
+
     return list_fish, list_shark, count_fish, count_shark, t
 
 
-results = predator_prey(40, 10)
+results = predator_prey(30, 5, 2, 8, 3)
 
 test_fish = results[2]
 test_shark = results[3]
@@ -202,6 +212,9 @@ test_time = results[-1]
 
 plt.plot(test_time, test_shark, 'g', label="Shark Population")
 plt.plot(test_time, test_fish, 'm', label="Fish Population")
+plt.ylabel("Population")
+plt.xlabel("Time")
+plt.title("Attempting to achieve an equilibrium")
 plt.show()
 
 
